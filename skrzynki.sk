@@ -1,0 +1,57 @@
+variables:
+	{magicznaskrzynka::0} = diamond block
+	{magicznaskrzynka::1} = gold block
+	{magicznaskrzynka::2} = iron block
+	{magicznaskrzynka::3} = diamond
+	{magicznaskrzynka::4} = gold ingot
+	{magicznaskrzynka::5} = iron ingot
+	{magicznaskrzynka::6} = diamond sword
+	{magicznaskrzynka::7} = gold axe
+	{magicznaskrzynka::8} = iron leggings
+	{magicznaskrzynka::9} = iron helmet
+	{magicznaskrzynka::10} = iron boots
+	{magicznaskrzynka::11} = iron chestplate
+	{magicznaskrzynka::12} = diamond boots
+	{magicznaskrzynka::13} = diamond helmet
+	{magicznaskrzynka::14} = 64 cobblestone
+	{magicznaskrzynka::15} = 1 ancient debris
+	{magicznaskrzynka::16} = 1 tnt
+	{magicznaskrzynka::17} = 1 sticky piston
+	{magicznaskrzynka::18} = 4 redstone block
+	{magicznaskrzynka::19} = 1 nametag
+	{magicznaskrzynka::20} = 4 sea lantern
+	{magicznaskrzynka::21} = 1 lava bucket
+	{magicznaskrzynka::22} = 1 anvil
+	{magicznaskrzynka::23} = 3 bookshelf
+	{magicznaskrzynka::24} = 40 obsidian
+
+on break of stone:
+	chance of 0.1%:
+		drop 1 chest named "&aMagiczna skrzynka!" with lore "&7Kliknij nią PPM" and "&7aby otworzyć!" at event-block
+
+command /admin-dajskrzynke:
+	permission: admin
+	trigger:
+		drop 1 chest named "&aMagiczna skrzynka!" with lore "&7Kliknij nią PPM" and "&7aby otworzyć!"
+
+on rightclick with chest:
+	if name of player's tool is "&aMagiczna skrzynka!":
+		if "%lore of player's tool%" contains "PPM":
+			if player has enough space for 1 bedrock:
+				cancel event
+				remove 1 chest named "&aMagiczna skrzynka!" with lore "&7Kliknij nią PPM" and "&7aby otworzyć!" from player
+				set {_whattodrop} to random element out of {magicznaskrzynka::*}
+				give {_whattodrop} to player
+				if player doesn't have {_whattodrop}:
+					log "%player% %{_whattodrop}%" to "bledyskrzynki.log"
+				if {kobieta.%player%} is true:
+					send "&a[Magiczna skrzynka] &7Wylosowałaś %{_whattodrop}%"
+				else:
+					send "&a[Magiczna skrzynka] &7Wylosowałeś %{_whattodrop}%"
+				loop all players:
+					if {sct.%loop-player%} is not set:
+						if loop-player is not player:
+							send "&a[Magiczna skrzynka] &7%player% &7wylosował/a %{_whattodrop}%" to loop-player
+			else:
+				cancel event
+				send "&7Brak miejsca w eq"
